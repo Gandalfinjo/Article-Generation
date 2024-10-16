@@ -1,0 +1,35 @@
+# Visual Studio
+.vs/
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+out/
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
+
+# Visual Studio Code
+.vscode/
+
+# Azure Web Apps
+publish/
+
+# NuGet Packages
+*.nupkg
+**/packages/*
+
+# Local history for Visual Studio Code
+.history/
+
+# Secrets
+ArticleGeneration/appsettings.Development.json
+ArticleGeneration/appsettings.Production.json
+ArticleGeneration/appsettings.json
