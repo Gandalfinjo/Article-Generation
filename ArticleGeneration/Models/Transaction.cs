@@ -147,6 +147,10 @@ public partial class Transaction
 
     public virtual SubStructure? SubStructure { get; set; }
 
+    public virtual ICollection<Tranche> Tranches { get; set; } = new List<Tranche>();
+
+    public virtual TransactionInstrumentType? TransactionInstrumentType { get; set; }
+
     public virtual TransactionProcurementStage? TransactionProcurementStage { get; set; }
 
     public virtual TransactionType? TransactionType { get; set; }

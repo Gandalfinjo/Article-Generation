@@ -9,20 +9,18 @@ using System.Threading.Tasks;
 
 namespace ArticleGeneration.Repositories
 {
-    public class TransactionRepository : ITransactionRepository
+    public class TrancheRepository : ITrancheRepository
     {
         private readonly AppDbContext _context;
 
-        public TransactionRepository(AppDbContext context)
+        public TrancheRepository(AppDbContext context)
         {
             _context = context;
         }
 
-        public async Task<List<Transaction>> GetAllTransactionsAsync()
+        public async Task<List<Tranche>> GetAllTranchesAsync()
         {
-            return await _context.Transactions
-                .Include(t => t.Tranches)
-                .ToListAsync();
+            return await _context.Tranches.ToListAsync();
         }
     }
 }

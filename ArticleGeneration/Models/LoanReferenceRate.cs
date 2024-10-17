@@ -17,5 +17,7 @@ public partial class LoanReferenceRate
 
     public int? SortOrder { get; set; }
 
+    public virtual ICollection<Tranche> Tranches { get; set; } = new List<Tranche>();
+
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }

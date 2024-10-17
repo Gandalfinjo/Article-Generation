@@ -31,9 +31,9 @@ namespace ArticleGeneration
                         else
                         {
                             _logger.LogInformation("Fetched Transactions:");
-                            for (int i = 0; i < 1; i++)
+                            for (int i = 39; i < 40; i++)
                             {
-                                _logger.LogInformation($"Name: {transactions[i].Name}, AlternateName: {transactions[i].AlternateName}, TransactionType: {transactions[i].TransactionType?.Name}, Date: {transactions[i].PublishedOn}");
+                                _logger.LogInformation($"Name: {transactions[i].Name}, Tranche: {transactions[i].Tranches?.First().Name}");
                             }
                         }
                     }
