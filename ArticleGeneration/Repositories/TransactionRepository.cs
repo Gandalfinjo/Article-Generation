@@ -26,5 +26,15 @@ namespace ArticleGeneration.Repositories
                         .ThenInclude(tcr => tcr.Company)
                 .ToListAsync();
         }
+
+        public async Task<List<Transaction>> GetNewOrUpdatedTransactionsAsync(DateTime lastChecked)
+        {
+            return await _context.Transactions
+                .Where(t => t.DateUpdated > lastChecked)
+                .Include(t => t.Tranches)
+                    .ThenInclude(tr => tr.TrancheCompanyRelationships)
+                        .ThenInclude(tcr => tcr.Company)
+                 .ToListAsync();
+        }
     }
 }

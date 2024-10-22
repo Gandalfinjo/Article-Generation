@@ -10,5 +10,6 @@ namespace ArticleGeneration.Repositories
     public interface ITransactionRepository
     {
         Task<List<Transaction>> GetAllTransactionsAsync();
+        Task<List<Transaction>> GetNewOrUpdatedTransactionsAsync(DateTime lastChecked);
     }
 }
