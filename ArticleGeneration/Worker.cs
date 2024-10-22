@@ -31,9 +31,15 @@ namespace ArticleGeneration
                         else
                         {
                             _logger.LogInformation("Fetched Transactions:");
-                            for (int i = 39; i < 40; i++)
+                            for (int i = 5127; i < 5128; i++)
                             {
-                                _logger.LogInformation($"Name: {transactions[i].Name}, Tranche: {transactions[i].Tranches?.First().Name}");
+                                // _logger.LogInformation($"Name: {transactions[i].Name}, Tranche: {transactions[i].Tranches?.First().Name}, Company: {transactions[i].Tranches.FirstOrDefault()?.TrancheCompanyRelationships.FirstOrDefault()?.Company.Name}");
+                                _logger.LogInformation($"Name: {transactions[i].Name}, Tranche: {transactions[i].Tranches?.First().Name}\n");
+                                _logger.LogInformation($"Companies: \n");
+                                foreach (var trancheCompanyRelationship in transactions[i].Tranches.First().TrancheCompanyRelationships)
+                                {
+                                    _logger.LogInformation($"Company Name: {trancheCompanyRelationship.Company.Name}");
+                                }
                             }
                         }
                     }

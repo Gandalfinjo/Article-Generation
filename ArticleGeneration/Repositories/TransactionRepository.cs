@@ -22,6 +22,8 @@ namespace ArticleGeneration.Repositories
         {
             return await _context.Transactions
                 .Include(t => t.Tranches)
+                    .ThenInclude(tr => tr.TrancheCompanyRelationships)
+                        .ThenInclude(tcr => tcr.Company)
                 .ToListAsync();
         }
     }
