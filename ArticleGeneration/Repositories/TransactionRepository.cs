@@ -27,14 +27,25 @@ namespace ArticleGeneration.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Transaction>> GetNewOrUpdatedTransactionsAsync(DateTime lastChecked)
+        public async Task<List<Transaction>> GetNewOrUpdatedTransactionsAsync(DateTime appStartTime)
         {
-            return await _context.Transactions
-                .Where(t => t.DateUpdated > lastChecked)
+            var updatedTransactions = await _context.Transactions
+                .Where(t => t.DateUpdated > appStartTime)
                 .Include(t => t.Tranches)
                     .ThenInclude(tr => tr.TrancheCompanyRelationships)
                         .ThenInclude(tcr => tcr.Company)
                  .ToListAsync();
+
+            var newTransactions = await _context.Transactions
+                .Where(t => t.DateAdded > appStartTime)
+                .Include(t => t.Tranches)
+                    .ThenInclude (tr => tr.TrancheCompanyRelationships)
+                        .ThenInclude(tcr => tcr.Company)
+                .ToListAsync();
+
+            var allTranasctions = updatedTransactions.Concat(newTransactions).ToList();
+
+            return allTranasctions;
         }
     }
 }

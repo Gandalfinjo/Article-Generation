@@ -8,14 +8,14 @@ namespace ArticleGeneration
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<Worker> _logger;
         private readonly IOpenAIService _openAIService;
-        private DateTime _lastChecked;
+        private DateTime _appStartTime;
 
         public Worker(IServiceScopeFactory scopeFactory, ILogger<Worker> logger, IOpenAIService openAIService)
         {
             _scopeFactory = scopeFactory;
             _logger = logger;
             _openAIService = openAIService;
-            _lastChecked = DateTime.UtcNow;
+            _appStartTime = DateTime.UtcNow;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -28,7 +28,7 @@ namespace ArticleGeneration
                     {
                         var repository = scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
                         // var transactions = await repository.GetAllTransactionsAsync();
-                        var transactions = await repository.GetNewOrUpdatedTransactionsAsync(_lastChecked);
+                        var transactions = await repository.GetNewOrUpdatedTransactionsAsync(_appStartTime);
 
                         if (transactions == null || transactions.Count == 0)
                         {
@@ -102,7 +102,7 @@ namespace ArticleGeneration
                     _logger.LogError(ex, "An error occured while processing transactions.");
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(0.5), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
         }
     }
