@@ -21,6 +21,7 @@ namespace ArticleGeneration.Repositories
         public async Task<List<Transaction>> GetAllTransactionsAsync()
         {
             return await _context.Transactions
+                .Where(t => t.Article == null)
                 .Include(t => t.Tranches)
                     .ThenInclude(tr => tr.TrancheCompanyRelationships)
                         .ThenInclude(tcr => tcr.Company)

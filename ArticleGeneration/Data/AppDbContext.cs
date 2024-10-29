@@ -44,6 +44,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<TransactionType> TransactionTypes { get; set; }
 
+    public virtual DbSet<Article> Articles { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Latin1_General_CI_AS");
@@ -394,6 +396,18 @@ public partial class AppDbContext : DbContext
             entity.HasKey(e => e.TransactionTypeId).HasName("PK__Transact__20266D0B3335971A");
 
             entity.Property(e => e.Name).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<Article>(entity =>
+        {
+            entity.HasKey(e => e.ArticleId);
+
+            entity.ToTable("Articles_DraganPeric");
+
+            entity.Property(e => e.ShortDescription).HasMaxLength(255);
+            entity.Property(e => e.Title).HasMaxLength(50);
+
+            entity.HasOne(d => d.Transaction).WithOne(p => p.Article).HasForeignKey<Article>(d => d.TransactionId);
         });
 
         OnModelCreatingPartial(modelBuilder);

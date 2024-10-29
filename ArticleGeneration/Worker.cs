@@ -27,8 +27,11 @@ namespace ArticleGeneration
                     using (var scope = _scopeFactory.CreateScope())
                     {
                         var repository = scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
-                        // var transactions = await repository.GetAllTransactionsAsync();
-                        var transactions = await repository.GetNewOrUpdatedTransactionsAsync(_appStartTime);
+
+                        var transactions = await repository.GetAllTransactionsAsync();
+                        var newTransactions = await repository.GetNewOrUpdatedTransactionsAsync(_appStartTime);
+
+                        var allTransactions = transactions.Concat(newTransactions).ToList();
 
                         if (transactions == null || transactions.Count == 0)
                         {
@@ -37,63 +40,55 @@ namespace ArticleGeneration
                         else
                         {
                             string prompt = $"Based on the following data about a transaction, write an informative article:\n";
-                            // for (int i = 5127; i < 5128; i++)
                             _logger.LogInformation("Fetched Transactions:");
-                            for (int i = 0; i < transactions.Count; i++)
+
+                            for (int i = 0; i < allTransactions.Count; i++)
                             {
-                                _logger.LogInformation($"Name: {transactions[i].Name}");
+                                _logger.LogInformation($"Name: {allTransactions[i].Name}");
 
-                                prompt += $"- Transaction Name: {transactions[i].Name}" +
-                                          $"- Transaction Description: {transactions[i].Description ?? ""}" +
-                                          $"- Live: {transactions[i].Live}" +
-                                          $"- Transaction Value: {transactions[i].Value ?? 0}" +
-                                          $"- Transaction Type: {transactions[i].TransactionType?.Name}" +
-                                          $"- Transaction Stage: {transactions[i].TransactionProcurementStage?.Name}" +
-                                          $"- Published On: {transactions[i].PublishedOn ?? new DateTime()}" +
-                                          $"- Selected Currency: {transactions[i].SelectedCurrency ?? ""}" +
-                                          $"- Transaction Instrument Type: {transactions[i].TransactionInstrumentType?.TransactionInstrumentTypeName}" +
-                                          $"- Product Category: {transactions[i].ProductCategory?.Name}" +
-                                          $"- Market Type: {transactions[i].MarketType?.MarketTypeName}" +
-                                          $"- Structure: {transactions[i].Structure?.StructureName}" +
-                                          $"- BankPricing: {transactions[i].BankPricing ?? 0}" +
-                                          $"- BankOfferPrice: {transactions[i].BankOfferPrice ?? 0}" +
-                                          $"- LoanReference Name: {transactions[i].BankBenchMark?.Name}" +
-                                          $"- LoanReference City: {transactions[i].BankBenchMark?.City}" +
-                                          $"- Product Type: {transactions[i].ProductType?.Name}";
+                                prompt += $"- Transaction Name: {allTransactions[i].Name}" +
+                                          $"- Transaction Description: {allTransactions[i].Description ?? ""}" +
+                                          $"- Live: {allTransactions[i].Live}" +
+                                          $"- Transaction Value: {allTransactions[i].Value ?? 0}" +
+                                          $"- Transaction Type: {allTransactions[i].TransactionType?.Name}" +
+                                          $"- Transaction Stage: {allTransactions[i].TransactionProcurementStage?.Name}" +
+                                          $"- Published On: {allTransactions[i].PublishedOn ?? new DateTime()}" +
+                                          $"- Selected Currency: {allTransactions[i].SelectedCurrency ?? ""}" +
+                                          $"- Transaction Instrument Type: {allTransactions[i].TransactionInstrumentType?.TransactionInstrumentTypeName}" +
+                                          $"- Product Category: {allTransactions[i].ProductCategory?.Name}" +
+                                          $"- Market Type: {allTransactions[i].MarketType?.MarketTypeName}" +
+                                          $"- Structure: {allTransactions[i].Structure?.StructureName}" +
+                                          $"- BankPricing: {allTransactions[i].BankPricing ?? 0}" +
+                                          $"- BankOfferPrice: {allTransactions[i].BankOfferPrice ?? 0}" +
+                                          $"- LoanReference Name: {allTransactions[i].BankBenchMark?.Name}" +
+                                          $"- LoanReference City: {allTransactions[i].BankBenchMark?.City}" +
+                                          $"- Product Type: {allTransactions[i].ProductType?.Name}";
 
-                                if (transactions[i].Tranches != null)
+                                if (allTransactions[i].Tranches != null)
                                 {
                                     prompt += $"- Tranches:\n";
-                                    foreach (var tranche in transactions[i].Tranches)
+                                    foreach (var tranche in allTransactions[i].Tranches)
                                     {
-                                        prompt += $"- Tranche Name: {transactions[i].Tranches?.First().Name}" +
-                                                  $"- Tranche Value: {transactions[i].Tranches?.First().Value}"; 
+                                        prompt += $"- Tranche Name: {allTransactions[i].Tranches?.First().Name}" +
+                                                  $"- Tranche Value: {allTransactions[i].Tranches?.First().Value}"; 
                                         
                                         if (tranche.TrancheCompanyRelationships != null)
                                         {
                                             prompt += $"- Companies: \n";
-                                            foreach (var trancheCompanyRelationship in transactions[i].Tranches.First().TrancheCompanyRelationships)
+                                            foreach (var trancheCompanyRelationship in allTransactions[i].Tranches.First().TrancheCompanyRelationships)
                                             {
                                                 prompt += $"\t- Company Name: {trancheCompanyRelationship.Company.Name}";
                                             }
                                         }
                                     }
                                 }
+
+                                var article = await _openAIService.GenerateArticleAsync(prompt);
+                                prompt = $"Based on the following data about a transaction, write an informative article:\n";
+                                _logger.LogInformation($"{article}");
+
+                                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                             }
-
-                            //for (int i = 0; i < transactions.Count; i++)
-                            //{
-                            //    // _logger.LogInformation($"Name: {transactions[i].Name}, Tranche: {transactions[i].Tranches?.First().Name}, Company: {transactions[i].Tranches.FirstOrDefault()?.TrancheCompanyRelationships.FirstOrDefault()?.Company.Name}");
-                            //    _logger.LogInformation($"Name: {transactions[i].Name}, Tranche: {transactions[i].Tranches?.First().Name}\n");
-                            //    _logger.LogInformation($"Companies: \n");
-                            //    foreach (var trancheCompanyRelationship in transactions[i].Tranches.First().TrancheCompanyRelationships)
-                            //    {
-                            //        _logger.LogInformation($"Company Name: {trancheCompanyRelationship.Company.Name}");
-                            //    }
-                            //}
-
-                            var article = await _openAIService.GenerateArticleAsync(prompt);
-                            _logger.LogInformation($"{article}");
                         }
                     }
                 }

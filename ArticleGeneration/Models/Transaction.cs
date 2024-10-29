@@ -154,4 +154,6 @@ public partial class Transaction
     public virtual TransactionProcurementStage? TransactionProcurementStage { get; set; }
 
     public virtual TransactionType? TransactionType { get; set; }
+
+    public virtual Article? Article { get; set; }
 }
