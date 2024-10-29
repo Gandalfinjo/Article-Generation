@@ -42,8 +42,6 @@ namespace ArticleGeneration.Services
             var openAiResponse = JsonSerializer.Deserialize<OpenAIResponse>(responseContent);
 
             return openAiResponse?.choices?.FirstOrDefault()?.text ?? "No text generated";
-
-            // return responseContent;
         }
     }
 }

@@ -26,14 +26,15 @@ namespace ArticleGeneration
                 {
                     using (var scope = _scopeFactory.CreateScope())
                     {
-                        var repository = scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
+                        var transactionRepository = scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
+                        var articleRepository = scope.ServiceProvider.GetRequiredService<IArticleRepository>();
 
-                        var transactions = await repository.GetAllTransactionsAsync();
-                        var newTransactions = await repository.GetNewOrUpdatedTransactionsAsync(_appStartTime);
+                        var oldtransactions = await transactionRepository.GetAllTransactionsAsync();
+                        var newTransactions = await transactionRepository.GetNewOrUpdatedTransactionsAsync(_appStartTime);
 
-                        var allTransactions = transactions.Concat(newTransactions).ToList();
+                        var allTransactions = oldtransactions.Concat(newTransactions).ToList();
 
-                        if (transactions == null || transactions.Count == 0)
+                        if (allTransactions == null || allTransactions.Count == 0)
                         {
                             _logger.LogInformation("No transactions found.");
                         }
@@ -67,6 +68,7 @@ namespace ArticleGeneration
                                 if (allTransactions[i].Tranches != null)
                                 {
                                     prompt += $"- Tranches:\n";
+
                                     foreach (var tranche in allTransactions[i].Tranches)
                                     {
                                         prompt += $"- Tranche Name: {allTransactions[i].Tranches?.First().Name}" +
@@ -75,6 +77,7 @@ namespace ArticleGeneration
                                         if (tranche.TrancheCompanyRelationships != null)
                                         {
                                             prompt += $"- Companies: \n";
+
                                             foreach (var trancheCompanyRelationship in allTransactions[i].Tranches.First().TrancheCompanyRelationships)
                                             {
                                                 prompt += $"\t- Company Name: {trancheCompanyRelationship.Company.Name}";
@@ -84,8 +87,19 @@ namespace ArticleGeneration
                                 }
 
                                 var article = await _openAIService.GenerateArticleAsync(prompt);
-                                prompt = $"Based on the following data about a transaction, write an informative article:\n";
                                 _logger.LogInformation($"{article}");
+
+                                try
+                                {
+                                    await articleRepository.AddArticleAsync(article, allTransactions[i].TransactionId);
+                                    _logger.LogInformation("Successfully added an article to the database!");
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogError(ex, "An error occured while trying to add an article to the database.");
+                                }
+                                
+                                prompt = $"Based on the following data about a transaction, write an informative article:\n";
 
                                 await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                             }
