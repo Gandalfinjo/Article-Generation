@@ -18,7 +18,7 @@ The Airplane Transaction Article Generator is a .NET Worker Service that periodi
 
 ## Usage
 
-To run the application, simply start the app. The background service will check for new or changed transactions every 10 seconds, generate articles about them using the OpenAI API, and store the results in the database while logging activity using ILogger<>.
+To run the application, simply start the app. The background service will check for new or changed transactions every 15 seconds, generate articles about them using the OpenAI API, and store the results in the database while logging activity using ILogger<>.
 
 ## Additional Information
 
