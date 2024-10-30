@@ -23,7 +23,7 @@ namespace ArticleGeneration.Repositories
             return await _context.Tranches
                 .Where(t => t.TrancheCompanyRelationships.Count() > 0)
                 .Include(t => t.TrancheCompanyRelationships)
-                    .ThenInclude(tcr => tcr.Company)                    
+                    .ThenInclude(tcr => tcr.Company)
                 .ToListAsync();
         }
     }
