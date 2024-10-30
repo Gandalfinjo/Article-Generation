@@ -2,7 +2,7 @@
 
 ## Description
 
-The Airplane Transaction Article Generator is a .NET Worker Service that periodically checks for new or updated transactions related to airplane companies in a database. It utilizes the OpenAI API to generate articles based on the retrieved transaction data and stores these articles back in the database.
+The Article Generation is a .NET Worker Service that periodically checks for new or updated transactions related to airplane companies in a database. It utilizes the OpenAI API to generate articles based on the retrieved transaction data and stores these articles back in the database.
 
 ## Technologies Used
 
