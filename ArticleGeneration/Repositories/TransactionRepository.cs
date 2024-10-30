@@ -22,6 +22,11 @@ namespace ArticleGeneration.Repositories
         {
             return await _context.Transactions
                 .Where(t => t.Article == null)
+                .Where(t => t.Value != null && t.Value > 0)
+                .Where(t => t.ProductCategoryId != null)
+                .Where(t => t.MarketTypeId != null)
+                .Where(t => t.StructureId != null)
+                .Where(t => t.Tranches.Count != 0)
                 .Include(t => t.Tranches)
                     .ThenInclude(tr => tr.TrancheCompanyRelationships)
                         .ThenInclude(tcr => tcr.Company)

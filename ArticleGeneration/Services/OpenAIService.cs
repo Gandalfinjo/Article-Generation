@@ -28,7 +28,7 @@ namespace ArticleGeneration.Services
             var requestBody = new
             {
                 prompt = prompt,
-                max_tokens = 500
+                max_tokens = 750
             };
 
             var json = JsonSerializer.Serialize(requestBody);
