@@ -41,6 +41,7 @@ namespace ArticleGeneration
                         else
                         {
                             string prompt = $"Based on the following data about a transaction, write an informative article:\n";
+                            _logger.LogInformation("Successfully fetched transactions.");
                             _logger.LogInformation("Fetched Transactions:");
 
                             for (int i = 0; i < allTransactions.Count; i++)

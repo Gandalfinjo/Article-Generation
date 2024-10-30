@@ -11,12 +11,6 @@ public partial class LoanReferenceRate
 
     public string? City { get; set; }
 
-    public string Tooltip { get; set; } = null!;
-
-    public int SecondaryRegionId { get; set; }
-
-    public int? SortOrder { get; set; }
-
     public virtual ICollection<Tranche> Tranches { get; set; } = new List<Tranche>();
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();

@@ -12,24 +12,23 @@ namespace ArticleGeneration.Repositories
     public class TransactionRepository : ITransactionRepository
     {
         private readonly AppDbContext _context;
+        private readonly TrancheRepository _trancheRepository;
 
         public TransactionRepository(AppDbContext context)
         {
             _context = context;
+            _trancheRepository = new TrancheRepository(context);
         }
 
         public async Task<List<Transaction>> GetAllTransactionsAsync()
         {
+            var filteredTranches = await _trancheRepository.GetAllTranchesAsync();
+
             return await _context.Transactions
                 .Where(t => t.Article == null)
                 .Where(t => t.Value != null && t.Value > 0)
-                .Where(t => t.ProductCategoryId != null)
-                .Where(t => t.MarketTypeId != null)
-                .Where(t => t.StructureId != null)
-                .Where(t => t.Tranches.Count != 0)
                 .Include(t => t.Tranches)
-                    .ThenInclude(tr => tr.TrancheCompanyRelationships)
-                        .ThenInclude(tcr => tcr.Company)
+                .Where(t => t.Tranches.Any(tr => filteredTranches.Contains(tr)))
                 .ToListAsync();
         }
 
