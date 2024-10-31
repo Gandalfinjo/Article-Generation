@@ -8,7 +8,7 @@ namespace ArticleGeneration
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<Worker> _logger;
         private readonly IOpenAIService _openAIService;
-        private DateTime _appStartTime;
+        private readonly DateTime _appStartTime;
 
         public Worker(IServiceScopeFactory scopeFactory, ILogger<Worker> logger, IOpenAIService openAIService)
         {
