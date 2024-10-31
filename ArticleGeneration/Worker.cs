@@ -73,7 +73,7 @@ namespace ArticleGeneration
                                     foreach (var tranche in allTransactions[i].Tranches)
                                     {
                                         prompt += $"- Tranche Name: {allTransactions[i].Tranches?.First().Name}" +
-                                                  $"- Tranche Value: {allTransactions[i].Tranches?.First().Value}"; 
+                                                  $"- Tranche Value: {allTransactions[i].Tranches?.First().Value}";
                                         
                                         if (tranche.TrancheCompanyRelationships != null)
                                         {
