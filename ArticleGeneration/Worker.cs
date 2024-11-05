@@ -26,12 +26,11 @@ namespace ArticleGeneration
                 {
                     using (var scope = _scopeFactory.CreateScope())
                     {
-                        var transactionRepository = scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
-                        var articleRepository = scope.ServiceProvider.GetRequiredService<IArticleRepository>();
                         var transactionService = scope.ServiceProvider.GetRequiredService<ITransactionService>();
+                        var articleService = scope.ServiceProvider.GetRequiredService<IArticleService>();
 
-                        var oldtransactions = await transactionRepository.GetAllTransactionsAsync();
-                        var newTransactions = await transactionRepository.GetNewOrUpdatedTransactionsAsync(_appStartTime);
+                        var oldtransactions = await transactionService.GetAllTransactionsAsync();
+                        var newTransactions = await transactionService.GetNewOrUpdatedTransactionsAsync(_appStartTime);
 
                         var allTransactions = oldtransactions.Concat(newTransactions).ToList();
 
@@ -55,7 +54,7 @@ namespace ArticleGeneration
 
                                 try
                                 {
-                                    await articleRepository.AddArticleAsync(article, allTransactions[i].TransactionId);
+                                    await articleService.AddArticleAsync(article, allTransactions[i].TransactionId);
                                     _logger.LogInformation("Successfully added an article to the database!");
                                 }
                                 catch (Exception ex)

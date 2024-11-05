@@ -9,6 +9,8 @@ namespace ArticleGeneration.Services
 {
     public interface ITransactionService
     {
+        Task<List<Transaction>> GetAllTransactionsAsync();
+        Task<List<Transaction>> GetNewOrUpdatedTransactionsAsync(DateTime lastChecked);
         string GeneratePrompt(Transaction transaction);
     }
 }

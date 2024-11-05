@@ -11,7 +11,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
 
 builder.Services.AddHttpClient<IOpenAIService, OpenAIService>();
 builder.Services.AddHostedService<Worker>();

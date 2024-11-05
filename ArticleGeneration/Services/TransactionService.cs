@@ -4,11 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ArticleGeneration.Models;
+using ArticleGeneration.Repositories;
 
 namespace ArticleGeneration.Services
 {
     public class TransactionService : ITransactionService
     {
+        private readonly ITransactionRepository _transactionRepository;
+
+        public TransactionService(ITransactionRepository repository)
+        {
+            _transactionRepository = repository;
+        }
+
+        public async Task<List<Transaction>> GetAllTransactionsAsync()
+        {
+            return await _transactionRepository.GetAllTransactionsAsync();
+        }
+        public async Task<List<Transaction>> GetNewOrUpdatedTransactionsAsync(DateTime lastChecked)
+        {
+            return await _transactionRepository.GetNewOrUpdatedTransactionsAsync(lastChecked);
+        }
+
         public string GeneratePrompt(Transaction transaction)
         {
             string prompt = $"Based on the following data about a transaction, write an informative article:\n";

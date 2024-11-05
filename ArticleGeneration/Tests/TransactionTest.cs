@@ -21,7 +21,7 @@ namespace ArticleGeneration.Tests
         public void SetUp()
         {
             _transactionRepositoryMock = new Mock<ITransactionRepository>();
-            _transactionServiceMock = new TransactionService();
+            _transactionServiceMock = new TransactionService(_transactionRepositoryMock.Object);
         }
 
         [Test]
