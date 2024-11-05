@@ -1,5 +1,6 @@
 ﻿using ArticleGeneration.Data;
 using ArticleGeneration.Repositories;
+using ArticleGeneration.Services;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
@@ -14,18 +15,21 @@ namespace ArticleGeneration.Tests
     public class ArticleTest
     {
         private Mock<IArticleRepository>? _articleRepositoryMock;
-        private const string TestGeneratedText = "This is a test article";
-        private const int TestTransactionId = 123;
+        private IArticleService? _articleServiceMock;
 
         [SetUp]
         public void SetUp()
         {
             _articleRepositoryMock = new Mock<IArticleRepository>();
+            _articleServiceMock = new ArticleService(_articleRepositoryMock.Object);
         }
 
         [Test]
         public async Task AddArticleAsyncTest()
         {
+            const string TestGeneratedText = "This is a test article";
+            const int TestTransactionId = 123;
+
             _articleRepositoryMock!.Setup(repo => repo.AddArticleAsync(TestGeneratedText, TestTransactionId)).Returns(Task.CompletedTask);
 
             await _articleRepositoryMock!.Object.AddArticleAsync(TestGeneratedText, TestTransactionId);

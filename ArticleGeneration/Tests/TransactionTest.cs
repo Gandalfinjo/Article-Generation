@@ -43,6 +43,24 @@ namespace ArticleGeneration.Tests
         }
 
         [Test]
+        public async Task GetAllTransactionsAsync_CallsRepository()
+        {
+            var transactions = new List<Transaction>
+            {
+                new Transaction { TransactionId = 1, Name = "Test Transaction 1", Live = true },
+                new Transaction { TransactionId = 2, Name = "Test Transaction 2", Live = true}
+            };
+
+            _transactionRepositoryMock!.Setup(repo => repo.GetAllTransactionsAsync()).ReturnsAsync(transactions);
+
+            var result = await _transactionServiceMock!.GetAllTransactionsAsync();
+
+            _transactionRepositoryMock.Verify(repo => repo.GetAllTransactionsAsync(), Times.Once());
+
+            Assert.That(result, Is.EqualTo(transactions));
+        }
+
+        [Test]
         public async Task GetNewOrUpdatedTransactionsAsyncTest()
         {
             var lastChecked = DateTime.UtcNow.AddDays(-1);
@@ -58,6 +76,28 @@ namespace ArticleGeneration.Tests
             var result = await _transactionRepositoryMock.Object.GetNewOrUpdatedTransactionsAsync(lastChecked);
 
             Assert.That(result, Is.Not.Null);
+            Assert.That(result.Count, Is.EqualTo(1));
+            Assert.That(result[0].TransactionId, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task GetNewOrUpdatedTransactionsAsync_CallsRepository()
+        {
+            var lastChecked = DateTime.UtcNow.AddDays(-1);
+            var transactions = new List<Transaction>
+            {
+                new Transaction { TransactionId = 1, DateUpdated = DateTime.UtcNow },
+                new Transaction { TransactionId = 2, DateUpdated = DateTime.UtcNow.AddDays(-2) }
+            };
+
+            _transactionRepositoryMock!.Setup(repo => repo.GetNewOrUpdatedTransactionsAsync(lastChecked))
+                .ReturnsAsync(transactions.FindAll(t => t.DateUpdated >= lastChecked));
+
+            var result = await _transactionServiceMock!.GetNewOrUpdatedTransactionsAsync(lastChecked);
+
+            _transactionRepositoryMock.Verify(repo => repo.GetNewOrUpdatedTransactionsAsync(lastChecked), Times.Once());
+
+            Assert.That(result, Is.Not.Empty);
             Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(result[0].TransactionId, Is.EqualTo(1));
         }
