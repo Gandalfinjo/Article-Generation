@@ -31,7 +31,7 @@ namespace ArticleGeneration.Services
                                       $"- LoanReference City: {transaction.BankBenchMark?.City}" +
                                       $"- Product Type: {transaction.ProductType?.Name}";
 
-            if (transaction.Tranches != null)
+            if (transaction.Tranches != null && transaction.Tranches.Count > 0)
             {
                 prompt += $"- Tranches:\n";
 
