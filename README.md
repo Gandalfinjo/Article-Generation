@@ -18,7 +18,7 @@ The Article Generation is a .NET Worker Service that periodically checks for new
 
 ## Usage
 
-To run the application, simply start the app. The background service will check for new or changed transactions every 15 seconds, generate articles about them using the OpenAI API, and store the results in the database while logging activity using ILogger<>.
+To run the application, simply start the app. The background service will check for new or changed transactions every 30 seconds, generate articles about them using the OpenAI API, and store the results in the database while logging activity using ILogger<>.
 
 ## Additional Information
 
