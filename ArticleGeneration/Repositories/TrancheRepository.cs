@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace ArticleGeneration.Repositories
 {
+    /// <summary>
+    /// Provides the implementation for interacting with tranches in the database.
+    /// </summary>
     public class TrancheRepository : ITrancheRepository
     {
         private readonly AppDbContext _context;
@@ -18,6 +21,11 @@ namespace ArticleGeneration.Repositories
             _context = context;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// Asynchronously retrieves all tranches from the database.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation. The task result is a list of <see cref="Tranche"/> objects.</returns>
         public async Task<List<Tranche>> GetAllTranchesAsync()
         {
             return await _context.Tranches
