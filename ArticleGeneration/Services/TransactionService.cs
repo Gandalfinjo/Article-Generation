@@ -36,7 +36,7 @@ namespace ArticleGeneration.Services
                                       $"- Transaction Value: {transaction.Value ?? 0}" +
                                       $"- Transaction Type: {transaction.TransactionType?.Name}" +
                                       $"- Transaction Stage: {transaction.TransactionProcurementStage?.Name}" +
-                                      $"- Published On: {transaction.PublishedOn ?? new DateTime()}" +
+                                      $"- Published On: {transaction.PublishedOn ?? null}" +
                                       $"- Selected Currency: {transaction.SelectedCurrency ?? ""}" +
                                       $"- Transaction Instrument Type: {transaction.TransactionInstrumentType?.TransactionInstrumentTypeName}" +
                                       $"- Product Category: {transaction.ProductCategory?.Name}" +

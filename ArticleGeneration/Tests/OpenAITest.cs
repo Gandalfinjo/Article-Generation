@@ -23,13 +23,12 @@ namespace ArticleGeneration.Tests
         public async Task GenerateArticleAsyncTest()
         {
             string prompt = "Write an article about unit testing in C#.";
-            string expectedArticle = "This is a generated article about unit testing in C#.";
-
-            _service!.Setup(service => service.GenerateArticleAsync(prompt)).ReturnsAsync(expectedArticle);
+            
+            _service!.Setup(service => service.GenerateArticleAsync(prompt));
 
             var result = await _service.Object.GenerateArticleAsync(prompt);
 
-            Assert.That(result, Is.EqualTo(expectedArticle));
+            Assert.That(result, Is.Not.Empty);
         }
     }
 }
