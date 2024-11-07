@@ -15,13 +15,13 @@ namespace ArticleGeneration.Tests
     public class ArticleTest
     {
         private Mock<IArticleRepository>? _articleRepositoryMock;
-        private IArticleService? _articleServiceMock;
+        private Mock<IArticleService>? _articleServiceMock;
 
         [SetUp]
         public void SetUp()
         {
             _articleRepositoryMock = new Mock<IArticleRepository>();
-            _articleServiceMock = new ArticleService(_articleRepositoryMock.Object);
+            _articleServiceMock = new Mock<IArticleService>();
         }
 
         [Test]
@@ -33,6 +33,25 @@ namespace ArticleGeneration.Tests
             _articleRepositoryMock!.Setup(repo => repo.AddArticleAsync(TestGeneratedText, TestTransactionId)).Returns(Task.CompletedTask);
 
             await _articleRepositoryMock!.Object.AddArticleAsync(TestGeneratedText, TestTransactionId);
+
+            _articleRepositoryMock.Verify(repo => repo.AddArticleAsync(TestGeneratedText, TestTransactionId), Times.Once());
+        }
+
+        [Test]
+        public async Task AddArticleAsync_CallsRepository()
+        {
+            const string TestGeneratedText = "This is a test article";
+            const int TestTransactionId = 123;
+
+            _articleRepositoryMock!.Setup(repo => repo.AddArticleAsync(TestGeneratedText, TestTransactionId)).Returns(Task.CompletedTask);
+
+            _articleServiceMock!.Setup(service => service.AddArticleAsync(TestGeneratedText, TestTransactionId))
+                .Callback(async (string text, int transactionId) =>
+                {
+                    await _articleRepositoryMock.Object.AddArticleAsync(text, transactionId);
+                });
+
+            await _articleServiceMock.Object.AddArticleAsync(TestGeneratedText, TestTransactionId);
 
             _articleRepositoryMock.Verify(repo => repo.AddArticleAsync(TestGeneratedText, TestTransactionId), Times.Once());
         }
