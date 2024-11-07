@@ -21,7 +21,7 @@ namespace ArticleGeneration.Tests
         }
 
         [Test]
-        public async Task GetAllTranchesAsyncTest()
+        public async Task GetAllTranchesAsync_RetrievesAllTranchesCorrectly()
         {
             var tranches = new List<Tranche>
             {

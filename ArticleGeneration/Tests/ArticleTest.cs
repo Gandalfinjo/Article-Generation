@@ -25,7 +25,7 @@ namespace ArticleGeneration.Tests
         }
 
         [Test]
-        public async Task AddArticleAsyncTest()
+        public async Task AddArticleAsync_AddsArticleCorrectly()
         {
             const string TestGeneratedText = "This is a test article";
             const int TestTransactionId = 123;

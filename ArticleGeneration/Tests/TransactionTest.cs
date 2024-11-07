@@ -25,7 +25,7 @@ namespace ArticleGeneration.Tests
         }
 
         [Test]
-        public async Task GetAllTransactionsAsyncTest()
+        public async Task GetAllTransactionsAsync_RetrievesAllTransactionsCorrectly()
         {
             var transactions = new List<Transaction>
             {
@@ -61,7 +61,7 @@ namespace ArticleGeneration.Tests
         }
 
         [Test]
-        public async Task GetNewOrUpdatedTransactionsAsyncTest()
+        public async Task GetNewOrUpdatedTransactionsAsync_RetrievesNewOrUpdatedTransactionsCorrectly()
         {
             var lastChecked = DateTime.UtcNow.AddDays(-1);
             var transactions = new List<Transaction>

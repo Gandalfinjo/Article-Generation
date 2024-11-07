@@ -20,7 +20,7 @@ namespace ArticleGeneration.Tests
         }
 
         [Test]
-        public async Task GenerateArticleAsyncTest()
+        public async Task GenerateArticleAsync_GeneratesArticleCorrectly()
         {
             string prompt = "Write an article about unit testing in C#.";
             
