@@ -61,8 +61,6 @@ namespace ArticleGeneration
                                 {
                                     _logger.LogError(ex, "An error occured while trying to add an article to the database.");
                                 }
-                                
-                                prompt = $"Based on the following data about a transaction, write an informative article:\n";
 
                                 await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                             }
